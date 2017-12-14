@@ -37,7 +37,7 @@ LRU works by maintaining data on the last time that each key in the store was â€
 
 Our implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.
 
-## <a id="corvostore_redis">Structure of a Data Type: Sorted Set</a>
+## <a id="sorted_set">Structure of a Data Type: Sorted Set</a>
 
 The sorted set data type in Redis is a collection of unique pairs of string members and numeric scores. The benefit of using a sorted set is that elements are kept in order based on their score. The members themselves must be unique, but the scores can be duplicated. In the case of duplicate scores, the members associated with those scores are sorted alphabetically.  
 
@@ -96,7 +96,7 @@ Like Redis, CorvoStore supports Append-Only-File persistence.  This means that i
 
 In order to implement this persistence, after parsing the commands, the server checks whether the specified operation is a write, and whether or not the operation was successfully performed on the store.  If the operation is a write, and it was successful, then the server appends it to a file on disk via an open write stream.
 
-## <a id="">Limitations and Future Plans</a>
+## <a id="limitations">Limitations and Future Plans</a>
 
 ### Improve Memory Tracker
 
