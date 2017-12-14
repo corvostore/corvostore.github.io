@@ -117,4 +117,4 @@ Because of its journal-like nature, AOF persistence can quickly produce a very l
 
 Thanks for reading about CorvoStore!
 
-We are all currently open to new opportunities, so don’t hesitate to get in touch!
+We are all currently open to new opportunities, so don’t hesitate to get in touch with [Peter Reznick](http://www.preznick.com/), [Kalyan Vedala](https://github.com/vedala) or [Preeti Viswanathan](https://github.com/preeV42500)!
