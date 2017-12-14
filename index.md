@@ -35,7 +35,9 @@ A dictionary is a data structure with key and value space, where each key is a u
 
 LRU works by maintaining data on the last time that each key in the store was “touched”, where a touch means insertion, update or read.  When an insertion or update causes the max memory allocation for the store to be reached, the store performs one or more LRU deletions until the store has enough space to accommodate the changes.  An LRU deletion is the removal of the least-recently-touched key-value pair.
 
-Our implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.
+Our implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of our data structure we use for our store with LRU eviction:
+
+<img src="./images/lru.png">
 
 ## <a id="sorted_set">Structure of a Data Type: Sorted Set</a>
 
