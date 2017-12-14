@@ -36,7 +36,6 @@ LRU works by maintaining data on the last time that each key in the store was �
 
 Our implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.
 
-
 ## Structure of a Data Type: Sorted Set
 
 The sorted set data type in Redis is a collection of unique pairs of string members and numeric scores. The benefit of using a sorted set is that elements are kept in order based on their score. The members themselves must be unique, but the scores can be duplicated. In the case of duplicate scores, the members associated with those scores are sorted alphabetically.  
@@ -54,21 +53,23 @@ To maintain O(log(N)) time for insertion and removal operations, and to more eff
 
 The defining feature of a skip list is that it is a probabilistic structure. What this means is that every time a new element is added to the lowest level of the list, it could repeatedly be added to upper levels of the list as well, and this addition happens a random number of times. This random addition of some nodes vertically through multiple levels means that when we traverse across a single level, we can ‘skip’ over many nodes that are present in the level below.
 
-So for instance, if we move across the first level of the list  in this diagram, we can go straight from node 7 to the tail of the list, and ‘skip’ over nodes 8, 20 and 42 from the lower level.
+This ability to ‘skip’ nodes as we traverse a level is similar to binary search, which is why searching for a node in a skip list has, on average, O(log(N)) time complexity.  A diagram of this composite data structure is below:
 
-This ability to ‘skip’ nodes as we traverse a level is similar to binary search, which is why searching for a node in a skip list has, on average, O(log(N)) time complexity.
+<img src="images/sorted_set.png">
 
 ## System Architecture
 
 A diagram of our final system architecture:
 
-
+<img src="images/system_architecture.png">
 
 At the top level we have two Node modules, one for the embedded JS client, and another for the server.
 
 ### The Client
 
 The client exposes methods to the user that generate TCP/IP requests.  Each method on the client object exposed when the module is imported corresponds to a Redis command, and takes appropriate arguments.  For example, the async client method set:
+
+<img src="images/set.png">
 
 corresponds to Redis’s SET key value command.  We use asynchronous methods in the client because the successful execution of the method depends upon receipt of a TCP/IP response from the server.
 
@@ -85,6 +86,8 @@ The server handles the request by means of an event listener that is set every t
 The parser validates the tokens.  This validation has two dimensions.  The parser checks that RESP string is properly formatted and also checks to make sure that the number of tokens make sense for the given operation.  Having parsed and verified the tokens, the server then executes the appropriate method on the store.  In our case, it will execute the method responsible for writing a string value into the store.
 
 The store method is where the data from the client is finally inserted into our LRU data structures.  Here, we have the CorvoStore setString method:
+
+<img src="images/setString.png">
 
 An important part of this write operation involves appropriately incrementing or decrementing our representation of the current memory allocation.  The memory tracker object exposes methods that the store uses to increment or decrement the representation of current memory allocation, which is used to determine when to perform an LRU deletion.  The memory tracker is used every time a write operation is performed on the store.
 
