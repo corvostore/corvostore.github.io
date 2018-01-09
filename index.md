@@ -4,7 +4,7 @@
 
 We were interested in experiencing the challenge of building a significant distributed system, and learning how Redis works and achieves it’s big O time-complexity benchmarks.  To this end, we set out to build CorvoStore from scratch, with Redis as a model.  Our [server](https://www.npmjs.com/package/corvoserver) can be downloaded via NPM, as can our JS [client](https://www.npmjs.com/package/corvo-node-client).
 
-This site provides a brief introduction to CorvoStore and its underlying data-structures and architecture.  For instructions on installing and using client or server, please refer to each module’s NPM documentation.
+This site provides a brief introduction to CorvoStore and its core datastructure,  its underlying data-structures and architecture.  For instructions on installing and using client or server, please refer to each module’s NPM documentation.
 
 ## Table of Contents
 
