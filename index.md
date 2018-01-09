@@ -8,14 +8,14 @@ This site provides a brief introduction to CorvoStore and its core datastructure
 
 ## Table of Contents
 
- - [CorvoStore and Redis](#corvostore_redis)
- - [Core LRU Structure](#LRU)
- - [Structure of a Data Type: Sorted Set](#sorted_set)
- - [System Architecture](#architecture)
- - [Limitations and Next Steps](#limitations)
- - [Conclusion](#conclusion)
+ 1. [CorvoStore and Redis](#corvostore_redis)
+ 2. [Core LRU Structure](#LRU)
+ 3. [Structure of a Data Type: Sorted Set](#sorted_set)
+ 4. [System Architecture](#architecture)
+ 5. [Limitations and Next Steps](#limitations)
+ 6. [Conclusion](#conclusion)
 
-## <a id="corvostore_redis">CorvoStore and Redis</a>
+## <a id="corvostore_redis">1. CorvoStore and Redis</a>
 
 Redis is a highly-performant in-memory key-value store.  In other words, it’s a fast, dictionary-like noSQL database that sits in memory.  In addition Redis features Least-recently-used key expiry.  I’ll explain this in more detail later, but for the time being, think of LRU as an algorithm for flushing data from the store when it’s full.  Redis also supports complex data types as values.  This means that Redis can store, say, a List or a Set as a value, and allows the user to perform operations on this data type after reading it through it’s key.  In addition, Redis supports optional on-disk persistence.
 
@@ -23,7 +23,7 @@ CorvoStore is an experimental project.  Our goals were not to create a productio
 
 To this end, we implemented two node modules available for download via NPM.  The first is an embedded JavaScript client, and the second is a server, which listens on the same port and possess the same command-level API as the Redis server itself.  Because we matched the command API and TCP-level protocol for server-client communication, our server is interoperable with Redis clients.
 
-## <a id="LRU">LRU Data Structure</a>
+## <a id="LRU">2. LRU Data Structure</a>
 
 The first problem we sought to tackle was how to go about implementing a Redis-style key value store at the data-structure level.  In order to do this, we had to come up with a data-structure that satisfied the following constraints:
 
@@ -39,7 +39,7 @@ Our implementation satisfies all of the constraints: a hash table in conjunction
 
 <img src="./images/lru.png">
 
-## <a id="sorted_set">Structure of a Data Type: Sorted Set</a>
+## <a id="sorted_set">3. Structure of a Data Type: Sorted Set</a>
 
 The sorted set data type in Redis is a collection of unique pairs of string members and numeric scores. The benefit of using a sorted set is that elements are kept in order based on their score. The members themselves must be unique, but the scores can be duplicated. In the case of duplicate scores, the members associated with those scores are sorted alphabetically.  
 
@@ -60,7 +60,7 @@ This ability to ‘skip’ nodes as we traverse a level is similar to binary sea
 
 <img src="images/sorted_set.png">
 
-## <a id="architecture">System Architecture</a>
+## <a id="architecture">4. System Architecture</a>
 
 A diagram of our final system architecture:
 
@@ -98,7 +98,7 @@ Like Redis, CorvoStore supports Append-Only-File persistence.  This means that i
 
 In order to implement this persistence, after parsing the commands, the server checks whether the specified operation is a write, and whether or not the operation was successfully performed on the store.  If the operation is a write, and it was successful, then the server appends it to a file on disk via an open write stream.
 
-## <a id="limitations">Limitations and Future Plans</a>
+## <a id="limitations">5. Limitations and Future Plans</a>
 
 ### Improve Memory Tracker
 
@@ -115,7 +115,7 @@ Redis supports a variety of eviction policies.  Many of these policies depend on
 
 Because of its journal-like nature, AOF persistence can quickly produce a very large file on disk.  Redis has several approaches to addressing this potential problem, including parsing large numbers of write requests into single, condensed request with the same effect, as well as periodically generating a snapshot-style AOF representation of the state at specific time-intervals, and replacing the journal AOF file that has been maintained since the server started running.  We would like to explore implementing one or both of these file-size optimization strategies.
 
-## <a id="conclusion">Conclusion</a>
+## <a id="conclusion">6. Conclusion</a>
 
 Thanks for reading about CorvoStore!
 
