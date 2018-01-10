@@ -2,9 +2,9 @@
 
 [CorvoStore](https://github.com/corvostore) is an in-memory key-value store with complex data types in the value space and optional persistence.  It was inspired by [Redis](https://Redis.io/), and built by [Peter Reznick](http://www.preznick.com/), [Kalyan Vedala](https://github.com/vedala) and [Preeti Viswanathan](https://github.com/preeV42500).
 
-We were interested in experiencing the challenge of building a significant distributed system, and learning how Redis works and achieves it’s big O time-complexity benchmarks.  To this end, we set out to build CorvoStore from scratch, with Redis as a model.  Our [server](https://www.npmjs.com/package/corvoserver) can be downloaded via NPM, as can our JS [client](https://www.npmjs.com/package/corvo-node-client).
+We were interested in experiencing the challenge of building a significant distributed system, and learning how Redis works and achieves it’s big-O time-complexity benchmarks.  To this end, we set out to build CorvoStore from scratch, with Redis as a model.  Our [server](https://www.npmjs.com/package/corvoserver) can be downloaded via NPM, as can our JS [client](https://www.npmjs.com/package/corvo-node-client).
 
-This site provides a brief introduction to CorvoStore and its core datastructure,  its underlying data-structures and architecture.  For instructions on installing and using client or server, please refer to each module’s NPM documentation.
+This site provides a brief introduction to CorvoStore, its core datastructures, and its underlying architecture.  For instructions on installing and using our client or server, please refer to each module’s NPM documentation.
 
 ## Table of Contents
 
@@ -17,11 +17,11 @@ This site provides a brief introduction to CorvoStore and its core datastructure
 
 ## <a id="corvostore_redis">CorvoStore and Redis</a>
 
-Redis is a highly-performant in-memory key-value store.  In other words, it’s a fast, dictionary-like noSQL database that sits in memory.  In addition Redis features Least-recently-used key expiry.  I’ll explain this in more detail later, but for the time being, think of LRU as an algorithm for flushing data from the store when it’s full.  Redis also supports complex data types as values.  This means that Redis can store, say, a List or a Set as a value, and allows the user to perform operations on this data type after reading it through it’s key.  In addition, Redis supports optional on-disk persistence.
+Redis is a highly-performant in-memory key-value store.  In other words, it’s a fast, dictionary-like noSQL database that sits in memory.  In addition Redis features a variety of eviction policies, in other words, algorithms for determining which keys and values are flushed from the store in the event that the store's size exceeds the maximum memory level set by the user.  Redis also supports complex data types as values.  This means that Redis can store, say, a List or a Set as a value, and allows the user to perform operations on this data type after reading it through its key.  In addition, Redis supports optional on-disk persistence.
 
-CorvoStore is an experimental project.  Our goals were not to create a production application or match Redis’ performance in absolute terms, but rather to experience the challenge of developing a non-trivial distributed application and learn more about Redis’ data-structure level implementation.  We did this by matching Redis’s big O time complexity for operations on the store and on the complex data-type values.
+CorvoStore is an experimental project.  Our goals were not to create a production application or to match Redis’ performance in absolute terms, but rather to experience the challenge of developing a non-trivial distributed application and learn more about Redis’ data-structure level implementation.  We did this by matching Redis’s big O time complexity for operations on the store and on the complex data-type values.
 
-To this end, we implemented two node modules available for download via NPM.  The first is an embedded JavaScript client, and the second is a server, which listens on the same port and possess the same command-level API as the Redis server itself.  Because we matched the command API and TCP-level protocol for server-client communication, our server is interoperable with Redis clients.
+To this end, we implemented two node modules available for download via NPM.  The first is an embedded JavaScript client, and the second is a server, which listens on the same port and possesses the same command-level API as the Redis server itself.  Because we matched the command API and TCP-level protocol for server-client communication, our server is interoperable with Redis clients.
 
 ## <a id="LRU">LRU Data Structure</a>
 
@@ -31,11 +31,11 @@ The first problem we sought to tackle was how to go about implementing a Redis-s
  - Must meet performance criteria: O(1) lookup, insertion, and deletion,
  - Must be able to flush data when maximum allowed memory is reached.
 
-A dictionary is a data structure with key and value space, where each key is a unique string that maps to a value.  Redis allows for a variety of data types as values, of which we implemented five: string, hash, list, set, and sorted set.  Our store also had to meet Redis’ big O performance criteria, that is, it had to manage constant time lookup, insertion, and deletion.  Finally, like Redis, our store had to implement an eviction policy, an algorithm for flushing data when we reached our max allowed memory.  We chose to adopt the [Least-Recently-Used eviction policy](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_Recently_Used_(LRU)) because of its centrality to Redis’s most common use case: that of LRU cache.
+A dictionary is a data structure with key and value space, where each key is a unique string that maps to a value.  Redis allows for a variety of data types as values, of which we implemented five: String, Hash, List, Set, and Sorted Set.  Our store also had to meet Redis’s big-O performance criteria, that is, it had to manage constant time lookup, insertion, and deletion.  Finally, like Redis, our store had to implement an eviction policy, an algorithm for flushing data when we reached our max allowed memory.  We chose to adopt the [Least-Recently-Used eviction policy](https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_Recently_Used_(LRU)) because of its centrality to Redis’s most common use case: that of LRU cache.
 
 LRU works by maintaining data on the last time that each key in the store was “touched”, where a touch means insertion, update or read.  When an insertion or update causes the max memory allocation for the store to be reached, the store performs one or more LRU deletions until the store has enough space to accommodate the changes.  An LRU deletion is the removal of the least-recently-touched key-value pair.
 
-Our implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of our data structure we use for our store with LRU eviction:
+Our final implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of our data structure we use for our store with LRU eviction:
 
 <img src="./images/lru.png">
 
