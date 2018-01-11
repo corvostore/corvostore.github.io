@@ -4,7 +4,7 @@
 
 We were interested in experiencing the challenge of building a significant distributed system, and learning how Redis works and achieves it’s big-O time-complexity benchmarks.  To this end, we set out to build CorvoStore from scratch, with Redis as a model.  Our [server](https://www.npmjs.com/package/corvoserver) can be downloaded via NPM, as can our JS [client](https://www.npmjs.com/package/corvo-node-client).
 
-This site provides a brief introduction to CorvoStore, its core datastructures, and its underlying architecture.  For instructions on installing and using our client or server, please refer to each module’s NPM documentation.
+This site provides a brief introduction to CorvoStore, its core data structures, and its underlying architecture.  For instructions on installing and using our client or server, please refer to each module’s NPM documentation.
 
 ## Table of Contents
 
@@ -35,10 +35,10 @@ A dictionary is a data structure with key and value space, where each key is a u
 
 LRU works by maintaining data on the last time that each key in the store was “touched”, where a touch means insertion, update or read.  When an insertion or update causes the max memory allocation for the store to be reached, the store performs one or more LRU deletions until the store has enough space to accommodate the changes.  An LRU deletion is the removal of the least-recently-touched key-value pair.
 
-A first naive implementation would use an array as the underlying data structure.  However, determining uniqueness (which would require a search) is an O(N) operation, and as a result, a simple array isn't viable:
+A first hypothetical implementation could use an array as the underlying data structure.  However, determining uniqueness (which would require a search) is an O(N) operation, and as a result, a simple array isn't viable:
 <img src="./images/LRU_array.png">
 
-A second implementation would use a hash table as the underlying data structure.  A hash table allows for constant time search, insertion and deletion, satisfying more of the criteria than an array.  However, a hash table alone can't maintain the LRU order:
+A second hypothetical implementation would use a hash table as the underlying data structure.  A hash table allows for constant time search, insertion and deletion, satisfying more of the criteria than an array.  However, a hash table alone can't maintain the LRU order:
 <img src="./images/LRU_hash.png">
 
 What about a hash table in conjunction with an array, where the array stores the LRU order?  Unfortunately, although we could add a key value pair to the store in constant time, any other operation is potentially O(N), since it would require moving elements from the front or middle of the array to the end:
