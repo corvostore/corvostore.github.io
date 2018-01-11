@@ -106,10 +106,22 @@ The parser validates the tokens.  This validation has two dimensions.  The parse
 The store method is where the data from the client is finally inserted into our LRU data structures.  Here, we have the CorvoStore setString method:
 
 ```javascript
-async set(key, val, ...flags) {
-  const writeDone = await this.writeToServer("SET", key, val, ...flags);
-  const returnVal = await this.resolveOnData();
-  return returnVal;
+setString(key, value) {
+  const accessedNode = this.mainHash[key];
+
+  if (accessedNode === undefined) {
+    const newNode = new CorvoNode(key, value);
+    this.mainHash[key] = newNode;
+    this.mainList.append(newNode);
+    this.memoryTracker.nodeCreation(newNode);
+  } else {
+    const oldValue = accessedNode.val;
+    accessedNode.val = value;
+    this.memoryTracker.stringUpdate(oldValue, value);
+    this.touch(key);
+  }
+  this.lruCheckAndEvictToMaxMemory();
+  return "OK";
 }
 ```
 
