@@ -44,7 +44,7 @@ A second implementation would use a hash table as the underlying data structure.
 What about a hash table in conjunction with an array, where the array stores the LRU order?  Unfortunately, although we could add a key value pair to the store in constant time, any other operation is potentially O(N), since it would require moving elements from the front or middle of the array to the end:
 <img src="./images/LRU_hash_array.png">
 
-Our final implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of our data structure we use for our store with LRU eviction:
+Our final implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of the data structure we used in our final implementation:
 
 <img src="./images/lru.png">
 
