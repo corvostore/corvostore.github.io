@@ -99,7 +99,13 @@ The parser validates the tokens.  This validation has two dimensions.  The parse
 
 The store method is where the data from the client is finally inserted into our LRU data structures.  Here, we have the CorvoStore setString method:
 
-<img src="images/setString.png">
+```javascript
+async set(key, val, ...flags) {
+  const writeDone = await this.writeToServer("SET", key, val, ...flags);
+  const returnVal = await this.resolveOnData();
+  return returnVal;
+}
+```
 
 An important part of this write operation involves appropriately incrementing or decrementing our representation of the current memory allocation.  The memory tracker object exposes methods that the store uses to increment or decrement the representation of current memory allocation, which is used to determine when to perform an LRU deletion.  The memory tracker is used every time a write operation is performed on the store.
 
