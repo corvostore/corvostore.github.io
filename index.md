@@ -81,7 +81,13 @@ At the top level we have two Node modules, one for the embedded JS client, and a
 
 The client exposes methods to the user that generate TCP/IP requests.  Each method on the client object exposed when the module is imported corresponds to a Redis command, and takes appropriate arguments.  For example, the async client method set:
 
-<img src="images/set.png">
+```javascript
+async set(key, val, ...flags) {
+  const writeDone = await this.writeToServer("SET", key, val, ...flags);
+  const returnVal = await this.resolveOnData();
+  return returnVal;
+}
+```
 
 corresponds to Redis’s SET key value command.  We use asynchronous methods in the client because the successful execution of the method depends upon receipt of a TCP/IP response from the server.
 
