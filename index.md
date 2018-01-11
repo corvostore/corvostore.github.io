@@ -35,6 +35,15 @@ A dictionary is a data structure with key and value space, where each key is a u
 
 LRU works by maintaining data on the last time that each key in the store was “touched”, where a touch means insertion, update or read.  When an insertion or update causes the max memory allocation for the store to be reached, the store performs one or more LRU deletions until the store has enough space to accommodate the changes.  An LRU deletion is the removal of the least-recently-touched key-value pair.
 
+A first naive implementation would use an array as the underlying data structure.  However, determining uniqueness (which would require a search) is an O(N) operation, and as a result, a simple array isn't viable:
+<img src="./images/LRU_array.png">
+
+A second implementation would use a hash table as the underlying data structure.  A hash table allows for constant time search, insertion and deletion, satisfying more of the criteria than an array.  However, a hash table alone can't maintain the LRU order:
+<img src="./images/LRU_hash.png">
+
+What about a hash table in conjunction with an array, where the array stores the LRU order?  Unfortunately, although we could add a key value pair to the store in constant time, any other operation is potentially O(N), since it would require moving elements from the front or middle of the array to the end:
+<img src="./images/LRU_hash_array.png">
+
 Our final implementation satisfies all of the constraints: a hash table in conjunction with a doubly linked list.  In this implementation, all of the keys are held in the hash table, thereby satisfying the constant time uniqueness constraint.  Each of the values associated with the keys holds a reference that points to a node in the doubly linked list.  Since a doubly-linked list allows us to move a node from any position in the list to the tail in constant time, we can now touch all of the keys in constant time.  Here is a representation of our data structure we use for our store with LRU eviction:
 
 <img src="./images/lru.png">
