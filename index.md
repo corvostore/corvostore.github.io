@@ -59,7 +59,7 @@ In our implementation of the sorted-set data type for CorvoStore, we had to matc
  - Insertion: O(log N)
  - Deletion: O(log N)
 
-To make the read operation a constant time operation, we used a hash table to store the members as keys with their scores as values.  However, we still need to maintain the order of the members in the skip list, in such a way that binary search and write operations are possible.
+To make the read operation a constant time operation, we used a hash table to store the members as keys with their scores as values.  However, we still need to maintain the order of the members in the sorted set, in such a way that binary search and write operations are possible.
 
 To maintain O(log(N)) time for insertion and removal operations, and to more effectively handle the possibility of duplicate scores, we used a probabilistic data structure called a skip list.  A skip list can be thought of as a variation of a multi-level linked list where each level’s elements are ordered. Nodes have up and down pointers in addition to the left and right pointers that are standard in doubly linked lists.
 
@@ -137,7 +137,9 @@ In order to implement this persistence, after parsing the commands, the server c
 
 Our memory tracker is an approximation, rather than exact count, of the memory currently used by the store.  The actual memory allocation is dynamic; it depends on the number of objects instantiated in a given runtime, and is managed by JS’s V8 engine.
 We want to explore further whether the V8 engine provides any APIs that would allow us to more precisely gauge current memory usage.
-Make More Clients
+
+
+### Make More Clients
 Our client coverage is currently limited to a JavaScript embedded client node module.  We would like to implement embedded clients in other languages, notably Ruby, and also develop a command line client.
 
 ### Add Key Expiry and Further Eviction Policies
