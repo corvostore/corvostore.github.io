@@ -1,6 +1,6 @@
 # CorvoStore
 
-[CorvoStore](https://github.com/corvostore) is an in-memory key-value store with complex data types in the value space and optional persistence.  It was inspired by [Redis](https://Redis.io/), and built by [Peter Reznick](http://www.preznick.com/), [Kalyan Vedala](https://vedala.github.io/) and [Preeti Viswanathan](https://preeV42500.github.io).
+[CorvoStore](https://github.com/corvostore) is an in-memory key-value store with complex data types in the value space and optional persistence.  It was inspired by [Redis](https://Redis.io/), and built by [Peter Reznick](http://www.preznick.com/) and [Preeti Viswanathan](https://preeV42500.github.io).
 
 We were interested in experiencing the challenge of building a significant distributed system, and learning how Redis works and achieves it’s big-O time-complexity benchmarks.  To this end, we set out to build CorvoStore from scratch, with Redis as a model.  Our [server](https://www.npmjs.com/package/corvoserver) can be downloaded via NPM, as can our JS [client](https://www.npmjs.com/package/corvo-node-client).
 
@@ -154,4 +154,4 @@ Because of its journal-like nature, AOF persistence can quickly produce a very l
 
 Thanks for reading about CorvoStore!
 
-We are all currently open to new opportunities, so don’t hesitate to get in touch with [Peter Reznick](http://www.preznick.com/), [Kalyan Vedala](https://vedala.github.io/) or [Preeti Viswanathan](https://preeV42500.github.io)!
+We are all currently open to new opportunities, so don’t hesitate to get in touch with [Peter Reznick](http://www.preznick.com/) or [Preeti Viswanathan](https://preeV42500.github.io)!
